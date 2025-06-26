@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { theme } from "../theme/theme";
 
 
 interface CardProps {
@@ -31,37 +32,29 @@ export default function Card({title, description, imageUrl} : CardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radii.md,
+    marginVertical: theme.spacing.sm,
+    marginHorizontal: theme.spacing.md,
+    ...theme.shadows.light,
   },
   image: {
     width: '100%',
     height: 150,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: theme.radii.md,
+    borderTopRightRadius: theme.radii.md,
   },
   content: {
-    padding: 16,
+    padding: theme.spacing.md,
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#212529',
-    marginBottom: 8,
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.sm,
   },
   description: {
     fontSize: 14,
-    color: '#6c757d',
+    color: theme.colors.textSecondary,
     lineHeight: 20,
   },
 }); 

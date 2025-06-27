@@ -1,47 +1,71 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
-import Header from './src/components/Header';
 import { useState } from 'react';
-import Card from './src/components/Card';
-import { theme } from './src/theme/theme';
-import ErrorBoundary from 'react-native-error-boundary';
-import AppNavigator from './src/navigation/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
 
 
-const ErrorFallback = ({ error, resetError }: { error: Error; resetError: () => void }) => (
-  <View style={styles.errorContainer}>
-    <Text>OOps</Text>
-    <Text>Une erreur est survenue</Text>
-    <ScrollView style={styles.errorDetailsContainer}>
-      <Text>
-        {error.name} : {error.message}
-      </Text>
-    </ScrollView>
-    <TouchableOpacity onPress={resetError}>
-      <Text>Réessayer l'action</Text>
-    </TouchableOpacity>
-  </View>
-)
 
 
-export default function App() {
-  const [cardCount, setCardCount] = useState(1);
+export default function HomeScreen() {
+    const [cardCount, setCardCount] = useState(1);
+    const navigation = useNavigation();
 
 
-  const addCard = () => {
-    setCardCount(cardCount + 1)
-  }
+    const addCard = () => {
+      setCardCount(cardCount + 1)
+    }
+  
+    const logError = (error: Error, stackTrace: string) => {
+      console.log("Erreur :", error, stackTrace)
+    }
+  
+    const triggerError = () => {
+      throw new Error("Erreur de test");
+    }
 
-  const logError = (error: Error, stackTrace: string) => {
-    console.log("Erreur :", error, stackTrace)
-  }
-
-  const triggerError = () => {
-    throw new Error("Erreur de test");
-  }
-  return (
+    return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-    <AppNavigator/>
+    <SafeAreaView style={styles.container}>
+      <Header title="My WikiApp"></Header>
+      <View style={styles.mainContent}>
+        
+        <View style={styles.statsSection}>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{cardCount}</Text>
+            <Text style={styles.statLabel}>Articles</Text>
+          </View>
+          <TouchableOpacity style={styles.statCard} onPress={() => navigation.navigate('Search')}>
+            <Text style={[styles.statNumber]}>🔍</Text>
+            <Text style={styles.statLabel}>Rechercher</Text>
+          </TouchableOpacity>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>15</Text>
+            <Text style={styles.statLabel}>Vues</Text>
+          </View>                    
+        </View>
+
+
+        <ScrollView style={styles.contentSection}>
+          <Text style={styles.sectionTitle}>Mes cartes d'article </Text>
+          {/* créer autant de cartes que ma valeur "count" *  */}
+          {/* Créer un tableau de la taill count qui contient count * cartes */}
+          {Array.from({length: cardCount}, (_, index) => (
+              <Card
+                key={index}
+                title={`Article ${index + 1}`}
+                description="Ceci est un exemple d'article"
+
+                ></Card>
+          ))}
+          <View style={styles.bottomSpacer}/>
+        </ScrollView>
+
+          <View style={styles.floatingButtonContainer}>
+            <TouchableOpacity style={styles.floatingButton} onPress={addCard}>
+              <Text style={styles.floatingButtonText}>Ajouter une carte</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+    </SafeAreaView>
     </ErrorBoundary>
   );
 }
@@ -155,8 +179,3 @@ const styles = StyleSheet.create({
     height: 100, // Espace pour le bouton flottant
   },
 });
-
-
-
-// [stat  stat  stat]
-// ...Scrollview...
